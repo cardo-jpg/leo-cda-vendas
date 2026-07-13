@@ -168,12 +168,12 @@
   <p class="sec">Visão Geral · Campanha de Vendas</p>
   <div class="kpi-grid">
     <div class="kpi c-cyan"><p class="kpi-lbl">Investido</p><p class="kpi-val cyan" id="k-inv">—</p><p class="kpi-note" id="k-inv-n">em anúncios</p></div>
-    <div class="kpi c-green"><p class="kpi-lbl">Faturamento</p><p class="kpi-val green" id="k-fat">—</p><p class="kpi-note">receita gerada</p></div>
-    <div class="kpi c-yellow"><p class="kpi-lbl">ROAS</p><p class="kpi-val yellow" id="k-roas">—</p><p class="kpi-note">retorno sobre ads</p></div>
     <div class="kpi c-purple"><p class="kpi-lbl">Vendas</p><p class="kpi-val purple" id="k-vendas">—</p><p class="kpi-note" id="k-vendas-n">pedidos</p></div>
-    <div class="kpi c-pink"><p class="kpi-lbl">Ticket Médio</p><p class="kpi-val pink" id="k-ticket">—</p><p class="kpi-note">faturamento ÷ vendas</p></div>
     <div class="kpi c-orange" id="k-cac-card"><p class="kpi-lbl">CAC</p><p class="kpi-val orange" id="k-cac">—</p><p class="kpi-note" id="k-cac-n">custo por venda</p></div>
     <div class="kpi c-cyan"><p class="kpi-lbl">Conversão</p><p class="kpi-val white" id="k-conv">—</p><p class="kpi-note">visita → venda</p></div>
+    <div class="kpi c-pink"><p class="kpi-lbl">Checkouts</p><p class="kpi-val pink" id="k-chk">—</p><p class="kpi-note">iniciados</p></div>
+    <div class="kpi c-green"><p class="kpi-lbl">Add ao Carrinho</p><p class="kpi-val green" id="k-cart">—</p><p class="kpi-note">no período</p></div>
+    <div class="kpi c-yellow"><p class="kpi-lbl">CTR</p><p class="kpi-val yellow" id="k-ctr">—</p><p class="kpi-note">cliques ÷ impressões</p></div>
   </div>
 
   <!-- FUNIL -->
@@ -186,9 +186,9 @@
   <p class="sec">Performance</p>
   <div class="row2b">
     <div class="chart-card">
-      <p class="chart-ttl">Faturamento por Campanha</p>
-      <p class="chart-sub">Receita gerada por cada campanha ativa</p>
-      <div class="chart-wrap h260"><canvas id="c-fat-camp"></canvas></div>
+      <p class="chart-ttl">Vendas por Campanha</p>
+      <p class="chart-sub">Nº de vendas por cada campanha ativa</p>
+      <div class="chart-wrap h260"><canvas id="c-camp"></canvas></div>
     </div>
     <div class="chart-card">
       <p class="chart-ttl">Vendas por Público</p>
@@ -198,14 +198,14 @@
   </div>
   <div class="row2b">
     <div class="chart-card">
-      <p class="chart-ttl">ROAS por Criativo</p>
-      <p class="chart-sub">Retorno sobre investimento · apenas criativos com vendas</p>
-      <div class="chart-wrap h260"><canvas id="c-roas"></canvas></div>
+      <p class="chart-ttl">Vendas por Criativo</p>
+      <p class="chart-sub">Nº de vendas · apenas criativos que converteram</p>
+      <div class="chart-wrap h260"><canvas id="c-cri"></canvas></div>
     </div>
     <div class="chart-card">
-      <p class="chart-ttl">Investido vs. Faturamento</p>
-      <p class="chart-sub">Por campanha · escala logarítmica</p>
-      <div class="chart-wrap h260"><canvas id="c-inv-fat"></canvas></div>
+      <p class="chart-ttl">CAC por Criativo</p>
+      <p class="chart-sub">Custo por venda · quanto menor, melhor</p>
+      <div class="chart-wrap h260"><canvas id="c-cac"></canvas></div>
     </div>
   </div>
 
@@ -214,10 +214,10 @@
   <div class="tbl-card">
     <table>
       <colgroup>
-        <col style="width:15%"><col style="width:8%"><col style="width:6%">
-        <col style="width:8%"><col style="width:6%"><col style="width:6%">
-        <col style="width:6%"><col style="width:7%"><col style="width:6%">
-        <col style="width:10%"><col style="width:6.5%"><col style="width:7%"><col style="width:6%">
+        <col style="width:19%"><col style="width:10%"><col style="width:8%">
+        <col style="width:9%"><col style="width:8%"><col style="width:8%">
+        <col style="width:9%"><col style="width:9%"><col style="width:8%">
+        <col style="width:9%"><col style="width:8%">
       </colgroup>
       <thead id="thead"><tr>
         <th>Criativo</th><th>Público</th><th>Campanha</th>
@@ -227,8 +227,6 @@
         <th class="td-r sortable" data-col="carrinho" onclick="sortTbl('carrinho')">Carrinho <span class="sa">↕</span></th>
         <th class="td-r sortable" data-col="checkout" onclick="sortTbl('checkout')">Checkout <span class="sa">↕</span></th>
         <th class="td-r sortable" data-col="vendas"  onclick="sortTbl('vendas')">Vendas <span class="sa">↕</span></th>
-        <th class="td-r sortable" data-col="fat"     onclick="sortTbl('fat')">Faturamento <span class="sa">↕</span></th>
-        <th class="td-r sortable" data-col="roas"    onclick="sortTbl('roas')">ROAS <span class="sa">↕</span></th>
         <th class="td-r sortable" data-col="cac"     onclick="sortTbl('cac')">CAC <span class="sa">↕</span></th>
         <th>Anúncio</th>
       </tr></thead>
@@ -245,7 +243,8 @@
 const SHEET_ID   = '1uSyHTXWefAnPdBxRD1yMgK0wMJJNms8SlRB3EzDD86o';
 const VENDAS_GID = '639532557';
 const GVT        = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${VENDAS_GID}`;
-// CAC saudável = até 30% do ticket médio (padrão de infoproduto). Ajuste se quiser.
+// Faturamento do Meta é descartado (vem sempre errado). CAC saudável = até 30% do preço de referência.
+const TICKET_REF     = 497;   // preço de referência do produto (R$) — ajuste se mudar
 const CAC_TARGET_PCT = 0.30;
 
 /* ═══════════ HELPERS ═══════════ */
@@ -323,27 +322,26 @@ function filtered(){
 function render(){
   const rows=filtered();
 
-  // Totais
-  let inv=0,imp=0,clk=0,vis=0,cart=0,chk=0,vendas=0,fat=0;
+  // Totais (sem faturamento — descartado por vir errado do Meta)
+  let inv=0,imp=0,clk=0,vis=0,cart=0,chk=0,vendas=0;
   rows.forEach(r=>{
     inv+=r._inv; imp+=r._imp; clk+=r._clk; vis+=r._vis;
-    cart+=r._cart; chk+=r._chk; vendas+=r._vendas; fat+=r._fat;
+    cart+=r._cart; chk+=r._chk; vendas+=r._vendas;
   });
-  const roas=inv>0?fat/inv:0;
-  const ticket=vendas>0?fat/vendas:0;
   const cac=vendas>0?inv/vendas:0;
   const conv=vis>0?vendas/vis*100:0;
+  const ctr=imp>0?clk/imp*100:0;
 
   set('k-inv',fmtR(inv));
-  set('k-fat',fmtR0(fat));
-  set('k-roas',roas>0?roas.toFixed(2).replace('.',',')+'x':'—');
   set('k-vendas',vendas);
   set('k-vendas-n',chk>0?`${chk} checkouts iniciados`:'pedidos');
-  set('k-ticket',vendas>0?fmtR0(ticket):'—');
   set('k-conv',vis>0?conv.toFixed(1).replace('.',',')+'%':'—');
+  set('k-chk',chk||'—');
+  set('k-cart',cart||'—');
+  set('k-ctr',imp>0?ctr.toFixed(2).replace('.',',')+'%':'—');
 
-  // CAC + meta
-  const cacTarget=ticket*CAC_TARGET_PCT;
+  // CAC + meta (limite = % do preço de referência, já que o faturamento do Meta é descartado)
+  const cacTarget=TICKET_REF*CAC_TARGET_PCT;
   set('k-cac',vendas>0?fmtR(cac):'—');
   const cacOk=vendas>0&&cac<=cacTarget;
   const cacEl=R('k-cac'), cacCard=R('k-cac-card');
@@ -355,7 +353,7 @@ function render(){
 
   renderFunnel({imp,clk,vis,cart,chk,vendas});
   renderCharts(rows);
-  renderTable(rows,{inv,clk,vis,cart,chk,vendas,fat});
+  renderTable(rows,{inv,clk,vis,cart,chk,vendas});
 
   // header sub
   if(LATEST){
@@ -399,21 +397,21 @@ function renderFunnel(f){
 
 /* Gráficos */
 function renderCharts(rows){
-  // por campanha
+  // Vendas por campanha
   const byC={};
-  rows.forEach(r=>{const k=r._camp||'—';(byC[k]=byC[k]||{inv:0,fat:0,vendas:0});byC[k].inv+=r._inv;byC[k].fat+=r._fat;byC[k].vendas+=r._vendas;});
-  const camps=Object.entries(byC).sort((a,b)=>b[1].fat-a[1].fat);
+  rows.forEach(r=>{const k=r._camp||'—';(byC[k]=byC[k]||{inv:0,vendas:0});byC[k].inv+=r._inv;byC[k].vendas+=r._vendas;});
+  const camps=Object.entries(byC).sort((a,b)=>b[1].vendas-a[1].vendas);
 
-  mkChart('c-fat-camp',{type:'bar',
-    data:{labels:camps.map(e=>campShort(e[0])),datasets:[{data:camps.map(e=>e[1].fat),
-      backgroundColor:C.green,borderRadius:6,maxBarThickness:60,
-      datalabels:{anchor:'end',align:'end',color:C.green,font:{size:12,weight:'bold'},formatter:v=>fmtR0(v)}}]},
+  mkChart('c-camp',{type:'bar',
+    data:{labels:camps.map(e=>campShort(e[0])),datasets:[{data:camps.map(e=>e[1].vendas),
+      backgroundColor:C.purple,borderRadius:6,maxBarThickness:60,
+      datalabels:{anchor:'end',align:'end',color:C.purple,font:{size:13,weight:'bold'},formatter:v=>v}}]},
     options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:18}},
-      plugins:{legend:{display:false},datalabels:{display:true},tooltip:{callbacks:{label:c=>' '+fmtR(c.parsed.y)}}},
-      scales:{x:{grid:{color:C.grid}},y:{grid:{color:C.grid},ticks:{callback:v=>'R$ '+(v/1000).toFixed(1)+'k'}}}}
+      plugins:{legend:{display:false},datalabels:{display:true},tooltip:{callbacks:{label:c=>' '+c.parsed.y+' vendas'}}},
+      scales:{x:{grid:{color:C.grid}},y:{grid:{color:C.grid},ticks:{precision:0}}}}
   });
 
-  // vendas por público (donut)
+  // Vendas por público (donut)
   const byP={};
   rows.forEach(r=>{const k=r._pub||'—';byP[k]=(byP[k]||0)+r._vendas;});
   const pubE=Object.entries(byP).filter(e=>e[1]>0).sort((a,b)=>b[1]-a[1]);
@@ -429,28 +427,31 @@ function renderCharts(rows){
       }}
   });
 
-  // ROAS por criativo
+  // Vendas + CAC por criativo
   const byCri={};
-  rows.forEach(r=>{const k=r._criativo||'—';(byCri[k]=byCri[k]||{inv:0,fat:0,vendas:0});byCri[k].inv+=r._inv;byCri[k].fat+=r._fat;byCri[k].vendas+=r._vendas;});
-  const roasE=Object.entries(byCri).filter(e=>e[1].vendas>0&&e[1].inv>0).map(e=>[e[0],e[1].fat/e[1].inv]).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  mkChart('c-roas',{type:'bar',
-    data:{labels:roasE.map(e=>lbl(e[0])),datasets:[{data:roasE.map(e=>+e[1].toFixed(1)),
-      backgroundColor:C.yellow,borderRadius:5,
-      datalabels:{anchor:'end',align:'start',color:'#08111e',font:{size:11,weight:'bold'},formatter:v=>v+'x'}}]},
+  rows.forEach(r=>{const k=r._criativo||'—';(byCri[k]=byCri[k]||{inv:0,vendas:0});byCri[k].inv+=r._inv;byCri[k].vendas+=r._vendas;});
+  const criSales=Object.entries(byCri).filter(e=>e[1].vendas>0);
+
+  const vendE=criSales.slice().sort((a,b)=>b[1].vendas-a[1].vendas).slice(0,8);
+  mkChart('c-cri',{type:'bar',
+    data:{labels:vendE.map(e=>lbl(e[0])),datasets:[{data:vendE.map(e=>e[1].vendas),
+      backgroundColor:C.green,borderRadius:5,
+      datalabels:{anchor:'end',align:'start',color:'#08111e',font:{size:12,weight:'bold'},formatter:v=>v}}]},
     options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
-      plugins:{legend:{display:false},datalabels:{display:true},tooltip:{callbacks:{label:c=>' ROAS '+c.parsed.x+'x'}}},
-      scales:{x:{grid:{color:C.grid},ticks:{callback:v=>v+'x'}},y:{grid:{color:C.grid},ticks:{font:{size:10}}}}}
+      plugins:{legend:{display:false},datalabels:{display:true},tooltip:{callbacks:{label:c=>' '+c.parsed.x+' vendas'}}},
+      scales:{x:{grid:{color:C.grid},ticks:{precision:0}},y:{grid:{color:C.grid},ticks:{font:{size:10}}}}}
   });
 
-  // investido vs faturamento por campanha
-  mkChart('c-inv-fat',{type:'bar',
-    data:{labels:camps.map(e=>campShort(e[0])),datasets:[
-      {label:'Investido',data:camps.map(e=>e[1].inv),backgroundColor:C.cyan,borderRadius:5,maxBarThickness:40},
-      {label:'Faturamento',data:camps.map(e=>e[1].fat),backgroundColor:C.green,borderRadius:5,maxBarThickness:40},
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtR(c.parsed.y)}`}}},
-      scales:{x:{grid:{color:C.grid}},y:{type:'logarithmic',grid:{color:C.grid},ticks:{callback:v=>{const a=[1,10,100,1000,10000];return a.includes(v)?'R$ '+v:'';}}}}}
+  // CAC por criativo (menor = melhor)
+  const cacE=criSales.map(e=>[e[0],e[1].inv/e[1].vendas]).sort((a,b)=>a[1]-b[1]).slice(0,8);
+  const cacTgt=TICKET_REF*CAC_TARGET_PCT;
+  mkChart('c-cac',{type:'bar',
+    data:{labels:cacE.map(e=>lbl(e[0])),datasets:[{data:cacE.map(e=>+e[1].toFixed(2)),
+      backgroundColor:cacE.map(e=>e[1]<=cacTgt?C.green:C.red),borderRadius:5,
+      datalabels:{anchor:'end',align:'start',color:'#08111e',font:{size:11,weight:'bold'},formatter:v=>fmtR(v)}}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},datalabels:{display:true},tooltip:{callbacks:{label:c=>' CAC '+fmtR(c.parsed.x)}}},
+      scales:{x:{grid:{color:C.grid},ticks:{callback:v=>'R$'+v}},y:{grid:{color:C.grid},ticks:{font:{size:10}}}}}
   });
 }
 
@@ -465,24 +466,25 @@ function updSortUI(){
   });
 }
 function renderTable(rows,tot){
+  const cacTgt=TICKET_REF*CAC_TARGET_PCT;
   const byCombo={};
   rows.forEach(r=>{
     const k=`${r._criativo}|||${r._pub}|||${r._camp}`;
-    if(!byCombo[k])byCombo[k]={criativo:r._criativo,pub:r._pub,camp:r._camp,link:r._link,inv:0,clk:0,vis:0,cart:0,chk:0,vendas:0,fat:0};
-    const o=byCombo[k];o.inv+=r._inv;o.clk+=r._clk;o.vis+=r._vis;o.cart+=r._cart;o.chk+=r._chk;o.vendas+=r._vendas;o.fat+=r._fat;
+    if(!byCombo[k])byCombo[k]={criativo:r._criativo,pub:r._pub,camp:r._camp,link:r._link,inv:0,clk:0,vis:0,cart:0,chk:0,vendas:0};
+    const o=byCombo[k];o.inv+=r._inv;o.clk+=r._clk;o.vis+=r._vis;o.cart+=r._cart;o.chk+=r._chk;o.vendas+=r._vendas;
     if(!o.link&&r._link)o.link=r._link;
   });
-  let arr=Object.values(byCombo).map(o=>({...o,roas:o.inv>0?o.fat/o.inv:0,cac:o.vendas>0?o.inv/o.vendas:0}));
+  let arr=Object.values(byCombo).map(o=>({...o,cac:o.vendas>0?o.inv/o.vendas:0}));
   const{col,dir}=sortState;
   arr.sort((a,b)=>{
     let av=a[col],bv=b[col];
-    // criativos sem venda vão pro fim quando ordena por roas/cac desc
-    if((col==='roas'||col==='cac')){av=a.vendas>0?av:(dir===-1?-1:Infinity);bv=b.vendas>0?bv:(dir===-1?-1:Infinity);}
+    // criativos sem venda vão pro fim quando ordena por cac
+    if(col==='cac'){av=a.vendas>0?av:(dir===-1?-1:Infinity);bv=b.vendas>0?bv:(dir===-1?-1:Infinity);}
     return (av-bv)*dir;
   });
   updSortUI();
   R('tbody').innerHTML=arr.map(v=>{
-    const roasCls=v.vendas===0?'':v.roas>=5?'pill-g':v.roas>=2?'pill-y':'pill-r';
+    const cacCls=v.vendas===0?'':v.cac<=cacTgt?'pill-g':v.cac<=cacTgt*2?'pill-y':'pill-r';
     return`<tr>
       <td class="td-criativo" title="${v.criativo}">${lbl(v.criativo)}</td>
       <td class="td-pub">${v.pub||'—'}</td>
@@ -493,22 +495,18 @@ function renderTable(rows,tot){
       <td class="td-r">${v.cart||'—'}</td>
       <td class="td-r">${v.chk||'—'}</td>
       <td class="td-r" style="color:var(--purple);font-weight:700">${v.vendas||'—'}</td>
-      <td class="td-r" style="color:var(--green);font-weight:700">${v.fat>0?fmtR0(v.fat):'—'}</td>
-      <td class="td-r">${v.vendas>0?`<span class="pill ${roasCls}">${v.roas.toFixed(1)}x</span>`:'—'}</td>
-      <td class="td-r" style="color:var(--sub)">${v.vendas>0?fmtR(v.cac):'—'}</td>
+      <td class="td-r">${v.vendas>0?`<span class="pill ${cacCls}">${fmtR(v.cac)}</span>`:'—'}</td>
       <td>${v.link?`<a href="${v.link}" target="_blank" class="ig-btn">${igIcon} Ver</a>`:'—'}</td>
     </tr>`;
   }).join('');
-  const roasT=tot.inv>0?tot.fat/tot.inv:0, cacT=tot.vendas>0?tot.inv/tot.vendas:0;
+  const cacT=tot.vendas>0?tot.inv/tot.vendas:0;
   R('tfoot').innerHTML=`<tr>
     <td colspan="3">TOTAL · ${arr.length} criativos</td>
     <td class="td-r" style="color:var(--cyan)">${fmtR(tot.inv)}</td>
     <td class="td-r">${tot.clk}</td><td class="td-r">${tot.vis}</td>
     <td class="td-r">${tot.cart}</td><td class="td-r">${tot.chk}</td>
     <td class="td-r" style="color:var(--purple)">${tot.vendas}</td>
-    <td class="td-r" style="color:var(--green)">${fmtR0(tot.fat)}</td>
-    <td class="td-r" style="color:var(--yellow)">${roasT.toFixed(1)}x</td>
-    <td class="td-r">${tot.vendas>0?fmtR(cacT):'—'}</td><td></td>
+    <td class="td-r" style="color:var(--orange)">${tot.vendas>0?fmtR(cacT):'—'}</td><td></td>
   </tr>`;
 }
 
@@ -525,14 +523,14 @@ async function load(){
         _link:col(r,'Link'),
         _inv:pM(col(r,'Investimento')), _imp:pN(col(r,'Impress')), _clk:pN(col(r,'Cliques')),
         _vis:pN(col(r,'Visitas')), _cart:pN(col(r,'Carrinho')), _chk:pN(col(r,'Checkout')),
-        _vendas:pN(col(r,'Vendas')), _fat:pM(col(r,'Faturamento')),
+        _vendas:pN(col(r,'Vendas')),
       };
     }).filter(r=>r._d);
     LATEST=ALL.reduce((m,r)=>!m||r._d>m?r._d:m,null);
     // preencher inputs de data com range
     if(LATEST){const ds=ALL.map(r=>r._d).sort((a,b)=>a-b);R('date-start').min=R('date-end').min=toInput(ds[0]);R('date-start').max=R('date-end').max=toInput(LATEST);}
     render();
-    set('note',`${ALL.length} linhas · Google Sheets (aba Vendas) · CAC saudável = até ${(CAC_TARGET_PCT*100)}% do ticket médio`);
+    set('note',`${ALL.length} linhas · Google Sheets (aba Vendas) · Faturamento do Meta ignorado · CAC saudável = até ${(CAC_TARGET_PCT*100)}% do preço ref. (${fmtR0(TICKET_REF)})`);
   }catch(e){
     set('h-sub','⚠ Erro ao carregar: '+e.message);
     console.error(e);
